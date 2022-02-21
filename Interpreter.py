@@ -9,9 +9,19 @@ Valeria Caro - v.caro@uniandes.edu.co - 202111040
 Sofia Velasquez - s.velasquezm2@uniandes.edu.co - 202113334
 """
 
-#Read file and debug it (ignore spaces and tabs)
-from dis import Instruction
 
+orientations = [":north", ":south", ":east", ":west"]
+
+direction = [":left", ":right"]
+
+dire = [":front", ":back"]
+
+
+
+variables =[]
+functions = {}
+
+#Read file and debug it (ignore spaces and tabs)
 
 def readfile (file):
    code = ""
@@ -22,6 +32,9 @@ def readfile (file):
             continue
          code += (data.rstrip().lstrip())
 
+   return debug(code)
+
+def debug (code): #with parentesis
    numParentesis = 0
    word = ""
    fileCode = []
@@ -33,47 +46,218 @@ def readfile (file):
          numParentesis -= 1
       if numParentesis == 0:
          word += ')'
+         word = word.replace(" )",")").replace("( ","(")
          fileCode.append(word)
          word = ""
          continue
-
       word += letter
-   
+      if word[-1]== ')':
+         word+= " "
    return fileCode
 
-#command
+#commands
 def defvar (words):
-   return True
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[2].isnumeric():
+         variables.append(tokens[1])
+         return True
+   return False
 
 def move (words):
-   return True
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 2:
+      if tokens[1].isnumeric() or tokens[1] in variables:
+         return True
+   return False
 
 def equals (words):
-   return True
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[2].isnumeric() and tokens[1] in variables:
+         return True
+   return False
 
 def turn (words):    
-   return True
+   global direction
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 2:
+      if tokens[1] in direction or tokens[1] == ":around":
+         return True
+   return False
 
 def face (words):
-   return True
+   global orientations
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 2:
+      if tokens[1] in orientations:
+         return True
+   return False
 
 def put (words):
-   return True
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[2].isnumeric() or tokens[2] in variables:
+         if tokens[1] == ":balloons" or tokens[1] == ":chips":
+            return True
+   return False
 
 def pick (words):
-   return True
-
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[2].isnumeric() or tokens[2] in variables:
+         if tokens[1] == ":balloons" or tokens[1] == ":chips":
+            return True
+   return False
+   
 def move_dir (words):
-   return True
+   global variables
+   global direction
+   global dire
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[1].isnumeric() or tokens[1] in variables:
+         if tokens[2] in direction or tokens[2] in dire:
+            return True
+   return False
 
 def run_dir (words):
+   global direction
+   global dire
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) >= 2:
+      for i in range(len(tokens)):
+         if i != 0:
+            if tokens[i] in direction + dire:
+               continue
+            else:
+               return False
    return True
 
 def move_face (words):
-   return True
+   global variables
+   global orientations
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[1].isnumeric() or tokens[1] in variables:
+         if tokens[2] in orientations:
+            return True
+   return False
 
 def skip (words):
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 1:
+      return True
+   return False
+
+#control Structures
+def if_ (words):
+   tokens = words.split()
+   if len(tokens) >= 5:
+      for i in range(1, len(tokens)):
+            print(tokens[i])
+      
+   
+def loop (words):
    return True
+
+def repeat (words):
+   return True
+
+def defun (words): #
+   global functions
+   tokens = words.split()
+   param = 0
+   if len(tokens) >= 4:
+      index = 2
+      for i in range (2,len(tokens)):
+         if tokens[i] == "(":
+            index+=1
+            continue
+         if tokens[i][-1] == ")":
+            index +=1
+            if tokens[i] == ")" or tokens[i]=="()":
+               break
+            param+=1
+            break
+         index +=1
+         param +=1
+      
+      functions[tokens[1]] = param
+
+      return tokens[index:]
+   return False
+
+#conditions
+def facing (words):
+   global orientations
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 2:
+      if tokens[1] in orientations:
+         return True
+   return False
+   
+def can_put (words):
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[2].isnumeric() or tokens[2] in variables:
+         if tokens[1] == ":balloons" or tokens[1] == ":chips":
+            return True
+   return False
+
+def can_pick (words):
+   global variables
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 3:
+      if tokens[2].isnumeric() or tokens[2] in variables:
+         if tokens[1] == ":balloons" or tokens[1] == ":chips":
+            return True
+   return False
+
+def can (words):
+   global orientations
+   words = words.replace("(", "").replace(")","")
+   tokens = words.split()
+   if len(tokens) == 2:
+      if tokens[1] in orientations:
+         return True
+   return False
+
+def not_ (words):
+   global conditions
+   tokens = words.split()
+   if len(tokens) == 2:
+      if tokens[1] in conditions:
+         funcion = conditions[tokens[1]]
+         if funcion(" ".join(tokens[1:])):
+            return True
+   return False
+
+
+controlStructure = {"if": if_,
+                    "loop": loop, 
+                    "repeat": repeat, 
+                    "defun": defun}
 
 command = {"defvar": defvar,
            "move": move, 
@@ -87,26 +271,11 @@ command = {"defvar": defvar,
            "move-face":move_face, 
            "skip": skip}
 
-#control Structures
-def if_ (words):
-   return True
-
-def loop (words):
-   return True
-
-def repeat (words):
-   return True
-
-def defun (words):
-   return True
-	
-controlStructure = {"if": if_,
-                    "loop": loop, 
-                    "repeat": repeat, 
-                    "defun": defun}
-
-orientations = [":north", ":south", ":east", ":west"]
-
+conditions = {"facing-p": facing,
+              "can-put-p": can_put,
+              "can-pick-p": can_pick,
+              "can-move-p": can,
+              "not": not_,}
 
 def validInput (code):
    for instruction in code:
@@ -117,7 +286,6 @@ def validInput (code):
             if letter != '(':
                word += letter
          else: 
-            print(word)
             if word in controlStructure:
                funcion = controlStructure[word]
 
@@ -125,25 +293,15 @@ def validInput (code):
                funcion = command[word]
             else:
                return "Invalid Sintaxis"
-            
+
             if not funcion(instruction):
                return "Invalid Sintaxis"
             break
             
 
    return "Valid Sintaxis"
-         
-
-            
 
 code = readfile("Robot.txt")
 
+
 print(validInput(code))
-
-
-
-
-
-
-
-    
