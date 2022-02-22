@@ -35,25 +35,26 @@ def readfile (file):
    return debug(code)
 
 def debug (code): #with parentesis
-   numParentesis = 0
    word = ""
-   fileCode = []
+   debug = []
+   numParentesis = 0
    for letter in code:
       if letter == '(':
          numParentesis += 1
-         
       elif letter == ')':
          numParentesis -= 1
+
+      word += letter
       if numParentesis == 0:
-         word += ')'
          word = word.replace(" )",")").replace("( ","(")
-         fileCode.append(word)
+         debug.append(word)
          word = ""
          continue
-      word += letter
       if word[-1]== ')':
-         word+= " "
-   return fileCode
+            word+= " "
+   if numParentesis != 0:
+      return False
+   return debug 
 
 #commands
 def defvar (words):
@@ -171,7 +172,7 @@ def if_ (words):
    tokens = words.split()
    if len(tokens) >= 5:
       for i in range(1, len(tokens)):
-            print(tokens[i])
+            pass
       
    
 def loop (words):
@@ -180,7 +181,7 @@ def loop (words):
 def repeat (words):
    return True
 
-def defun (words): #
+def defun (words):
    global functions
    tokens = words.split()
    param = 0
@@ -234,6 +235,8 @@ def can_pick (words):
             return True
    return False
 
+
+
 def can (words):
    global orientations
    words = words.replace("(", "").replace(")","")
@@ -254,12 +257,12 @@ def not_ (words):
    return False
 
 
-controlStructure = {"if": if_,
+controlStructures = {"if": if_,
                     "loop": loop, 
                     "repeat": repeat, 
                     "defun": defun}
 
-command = {"defvar": defvar,
+commands = {"defvar": defvar,
            "move": move, 
            "=": equals, 
            "turn": turn, 
@@ -300,6 +303,7 @@ def validInput (code):
             
 
    return "Valid Sintaxis"
+
 
 code = readfile("Robot.txt")
 
