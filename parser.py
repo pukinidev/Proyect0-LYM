@@ -373,18 +373,13 @@ conditions = {"facing-p": facing,
               "can-move-p": can_move,
               "not": not_}
 
-
-
-
-code = readfile("xd.txt")
+code = readfile("Robot.txt")
 if code != False:
    tokens = tokenizeInfo(code)
-   for i in tokens:
-      print(i)
-   # if IsItValid(tokens):
-   #    print("Valid Sintaxis")
-   # else:
-   #    print("Invalid Sintaxis")
+   if IsItValid(tokens):
+      print("Valid Sintaxis")
+   else:
+      print("Invalid Sintaxis")
 else:
    print("Invalid Sintaxis")
 

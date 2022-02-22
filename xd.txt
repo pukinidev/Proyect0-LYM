@@ -1,5 +1,0 @@
-(loop (not(can-pick-p :balloons 1)) ((put :balloons 1) (put :balloons 1)))
-(if (not(can-put-p :chips 1)) (put :balloons 1) (put :balloons 1))
-(if (not(can-put-p :balloons 1)) (put :balloons 1) (put :balloons 1))
-(if (not(can-pick-p :chips 1)) (put :balloons 1) (put :balloons 1))
-(if (not(can-pick-p :balloons 1)) (put :balloons 1) (put :balloons 1))
