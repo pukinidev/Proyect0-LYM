@@ -168,7 +168,7 @@ def if_(tokens): #TODO
          if tokens[3] == "not":
             param = 9
             if tokens[5] == "can-put-p" or tokens[3] == "can-pick-p":
-               param += 1
+               param = 10
          elif tokens[3] == "can-put-p" or tokens[3] == "can-pick-p":
             param = 7
          else:
@@ -199,8 +199,8 @@ def loop (tokens): #TODO
          if tokens[3] == "not":
             param = 9
             if tokens[5] == "can-put-p" or tokens[3] == "can-pick-p":
-               param += 1
-         elif tokens[3] == "can-put-p" or tokens[3] == "can-move-p":
+               param = 10
+         elif tokens[3] == "can-put-p" or tokens[3] == "can-pick-p":
             param = 7
          else:
             param = 6
@@ -371,7 +371,7 @@ conditions = {"facing-p": facing,
               "can-put-p": can_p,
               "can-pick-p": can_p,
               "can-move-p": can_move,
-              "not": not_,}
+              "not": not_}
 
 
 
@@ -379,12 +379,12 @@ conditions = {"facing-p": facing,
 code = readfile("xd.txt")
 if code != False:
    tokens = tokenizeInfo(code)
-   # for i in tokens:
-   #    print(i)
-   if IsItValid(tokens):
-      print("Valid Sintaxis")
-   else:
-      print("Invalid Sintaxis")
+   for i in tokens:
+      print(i)
+   # if IsItValid(tokens):
+   #    print("Valid Sintaxis")
+   # else:
+   #    print("Invalid Sintaxis")
 else:
    print("Invalid Sintaxis")
 
