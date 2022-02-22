@@ -105,6 +105,7 @@ def face (tokens):
 def put (tokens):
    global carries
    global variables
+   
    if len(tokens) == 5:
       if tokens[0] == "(" and tokens[-1] == ")":
          if tokens[2] in carries:
@@ -165,7 +166,9 @@ def if_(tokens): #TODO
       if tokens[3] in conditions:
          funcion = conditions[tokens[3]]
          if tokens[3] == "not":
-            param = 7
+            param = 9
+            if tokens[5] == "can-put-p" or tokens[3] == "can-pick-p":
+               param += 1
          elif tokens[3] == "can-put-p" or tokens[3] == "can-pick-p":
             param = 7
          else:
@@ -194,16 +197,18 @@ def loop (tokens): #TODO
       if tokens[3] in conditions:
          funcion = conditions[tokens[3]]
          if tokens[3] == "not":
-            param = 6
+            param = 9
+            if tokens[5] == "can-put-p" or tokens[3] == "can-pick-p":
+               param += 1
          elif tokens[3] == "can-put-p" or tokens[3] == "can-move-p":
             param = 7
          else:
-            param = 8
+            param = 6
          condicion = tokens[2:param]
          if not funcion(condicion):
             return False
 
-         block = tokens[param:-2]
+         block = tokens[param+1:-2]
          com = []
          command=[]
          for symbol in block:
@@ -213,10 +218,10 @@ def loop (tokens): #TODO
                com = []
          
          for i in command:
-            funcion = commands[i[2]]
+            funcion = commands[i[1]]
             if not funcion(i):
                return False
-         return True
+      return True
    return False
 
 def repeat(tokens):
@@ -234,13 +239,13 @@ def repeat(tokens):
                com = []
          
          for i in command:
-            funcion = commands[i[2]]
+            funcion = commands[i[1]]
             if not funcion(i):
                return False
          return True
    return False
 
-def defun ():
+def defun (tokens):
    if len(tokens) >= 7 and tokens[0] == "(" and tokens[-1] == ")":
       paramStop = 4
       numParam = 0
@@ -260,7 +265,7 @@ def defun ():
             com = []
          
       for i in command:
-         funcion = commands[i[2]]
+         funcion = commands[i[1]]
          if not funcion(i):
             return False
       
@@ -300,13 +305,13 @@ def not_(tokens):
    if len(tokens) == 6 or len(tokens)==7:
       if tokens[3] in conditions:
          funcion = conditions[tokens[3]]
-         if funcion(tokens[2:]):
+         if funcion(tokens[2:-1]):
             return True
    return False
 
 #RECURSION
-def recursion (tokens):
-   param = tokens[1]
+def recursion_ (tokens):
+   param = functions[tokens[1]]
    if (len(tokens)-3) == param:
       return True
    return False
@@ -317,26 +322,22 @@ def IsItValid (code):
    global commands
    global functions
    for instruction in code:
-      recursion = False
       if instruction[1] in controlStructures:
          funcion = controlStructures[instruction[1]]
       elif instruction[1] in commands:
          funcion = commands[instruction[1]]
       elif instruction[1] in functions:
-         recursion = True
-         if not recursion(instruction):
+         if not recursion_(instruction):
             return False
-         
+         else:
+            continue   
       else:
          return False
          
-      if not recursion and not funcion(instruction):
+      if not funcion(instruction):
          return False
-         break
 
    return True
-
-
 
 ###########################################
 orientations = [":north", ":south", ":east", ":west"]
