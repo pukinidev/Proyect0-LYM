@@ -374,6 +374,7 @@ conditions = {"facing-p": facing,
               "not": not_}
 
 code = readfile("Robot.txt")
+# Una cosita adicional, en nuestro caso en el codigo no esta funcionando el if(not(can-put-p)) y if(not(can-pick-p)
 if code != False:
    tokens = tokenizeInfo(code)
    if IsItValid(tokens):
